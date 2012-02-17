@@ -11,7 +11,7 @@ class QCustomLevelSpin(QtGui.QWidget):
         basepath = os.environ.get('LABRADPATH',None)
         if not basepath:
             raise Exception('Please set your LABRADPATH environment variable')
-        path = os.path.join(basepath,'cct/clients/qtui/levelspinslider.ui')
+        path = os.path.join(basepath,'sqip/clients/qtui/levelspinslider.ui')
         uic.loadUi(path,self)
         #set widget properties
         self.title.setText(title)

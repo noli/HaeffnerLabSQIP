@@ -22,6 +22,8 @@ timeout = 20
 from labrad.server import LabradServer, setting, Signal
 from twisted.internet.defer import Deferred, returnValue, inlineCallbacks, DeferredLock
 from twisted.internet import reactor
+from twisted.internet.threads import deferToThread
+import time
 
 SIGNALID = 331483
 
@@ -62,11 +64,13 @@ class NormalPMTFlow( LabradServer):
         name = self.dataSetName
         yield self.dv.cd(dir, True)
         self.dataSet = yield self.dv.new(name, [('t', 'num')], [('KiloCounts/sec','866 ON','num'),('KiloCounts/sec','866 OFF','num'),('KiloCounts/sec','Differential Signal','num')])
+        self.startTime = time.time()
         yield self.addParameters()
     
     @inlineCallbacks
     def addParameters(self):
-        yield None
+        yield self.dv.add_parameter('plotLive',True)
+        yield self.dv.add_parameter('startTime',self.startTime)
     
     @setting(0, 'Set Save Folder', folder = '*s', returns = '')
     def setSaveFolder(self,c , folder):
@@ -191,6 +195,7 @@ class NormalPMTFlow( LabradServer):
     @inlineCallbacks
     def _programPBOXDiff(self):
         yield self.pbox.send_command('DifferentialPMTCount.py',[['FLOAT','CountingInterval',str(10**6 * self.collectTimes['Differential'])]])
+        yield deferToThread(time.sleep,.2) #give it enough time to finish programming
         yield self.trigger.trigger('PaulBox')
     
     @inlineCallbacks
@@ -228,7 +233,7 @@ class NormalPMTFlow( LabradServer):
             rawdata = yield self.n.get_all_counts()
             if len(rawdata) != 0:
                 if self.currentMode == 'Normal':
-                    toDataVault = [ [elem[2], elem[0], 0, 0] for elem in rawdata] # converting to format [time, normal count, 0 , 0]
+                    toDataVault = [ [elem[2] - self.startTime, elem[0], 0, 0] for elem in rawdata] # converting to format [time, normal count, 0 , 0]
                 elif self.currentMode =='Differential':
                     toDataVault = self.convertDifferential(rawdata)
                 self.processRequests(toDataVault)
@@ -251,7 +256,7 @@ class NormalPMTFlow( LabradServer):
             t = str(dataPoint[1])
             self.lastDifferential[t] = float(dataPoint[0])
             diff = self.lastDifferential['ON'] - self.lastDifferential['OFF']
-            totalData.append( [ dataPoint[2], self.lastDifferential['ON'], self.lastDifferential['OFF'], diff ] )
+            totalData.append( [ dataPoint[2] - self.startTime, self.lastDifferential['ON'], self.lastDifferential['OFF'], diff ] )
         return totalData
             
 if __name__ == "__main__":

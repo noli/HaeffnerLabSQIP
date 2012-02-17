@@ -7,7 +7,7 @@
 name = TimeResolvedFPGA
 version = 1.0
 description = 
-instancename = TimeResolvedFPGA
+instancename = %LABRADNODE% TimeResolvedFPGA
 
 [startup]
 cmdline = %PYTHON% %FILE%
@@ -35,7 +35,7 @@ MINBUF,MAXBUF = [1024, 16776192] #range of allowed buffer lengths
 timeResolution = 5.0*10**-9 #seconds
 
 class TimeResolvedFPGA(LabradServer):
-    name = 'TimeResolvedFPGA'
+    name = '%LABRADNODE% TimeResolvedFPGA'
     
     def initServer(self):
         self.inRequest = False

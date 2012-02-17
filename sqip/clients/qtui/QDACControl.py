@@ -11,7 +11,7 @@ class QDACControl(QtGui.QWidget):
         basepath = os.environ.get('LABRADPATH',None)
         if not basepath:
             raise Exception('Please set your LABRADPATH environment variable')
-        path = os.path.join(basepath,'cct/clients/qtui/daccontrol.ui')
+        path = os.path.join(basepath,'sqip/clients/qtui/daccontrol.ui')
 
         uic.loadUi(path,self)
 

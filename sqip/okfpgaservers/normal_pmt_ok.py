@@ -6,7 +6,7 @@
 [info]
 name = NormalPMTCountFPGA
 version = 1.0
-description = 
+description = Normal and differential count FPGA
 instancename = NormalPMTCountFPGA
 
 [startup]

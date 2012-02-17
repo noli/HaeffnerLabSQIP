@@ -6,7 +6,7 @@
 [info]
 name = Trigger
 version = 1.0
-description = 
+description = Trigger FPGA for Paul Box
 instancename = Trigger
 
 [startup]

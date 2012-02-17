@@ -1,3 +1,22 @@
+"""
+### BEGIN NODE INFO
+[info]
+name = CCTGUI
+version = 1.1
+description = Graphical user interface for DAC control,laser room and PMT count
+instancename = CCTGUI
+[startup]
+cmdline = %PYTHON% %FILE%
+timeout = 20
+[shutdown]
+message = 987654321
+timeout = 20
+### END NODE INFO
+
+"""
+
+
+
 from PyQt4 import QtGui, QtCore
 
 class CCT_GUI(QtGui.QMainWindow):
@@ -9,7 +28,7 @@ class CCT_GUI(QtGui.QMainWindow):
         voltageControlTab = self.makeVoltageWidget(reactor)
 
         tabWidget = QtGui.QTabWidget()
-        tabWidget.addTab(voltageControlTab,'&Trap Voltages')
+        tabWidget.addTab(voltageControlTab,'&Trap V, DONT CHANGE FASTER THAN 1klick/s, otherwise reset DAC')
         tabWidget.addTab(lightControlTab,'&Laser Room')
 
         self.setCentralWidget(tabWidget)
@@ -28,12 +47,12 @@ class CCT_GUI(QtGui.QMainWindow):
         widget = QtGui.QWidget()
         from DAC_CONTROL import DAC_CONTROL
         from PMT_CONTROL import pmtWidget
-        from TRAPDRIVE_MODULATION_CONTROL import TRAPDRIVE_MODULATION_CONTROL
+        #from TRAPDRIVE_MODULATION_CONTROL import TRAPDRIVE_MODULATION_CONTROL
         from multiplexer.MULTIPLEXER_CONTROL import multiplexerWidget
         gridLayout = QtGui.QGridLayout()
         gridLayout.addWidget(DAC_CONTROL(reactor),0,0)
         gridLayout.addWidget(pmtWidget(reactor),0,1)
-        gridLayout.addWidget(TRAPDRIVE_MODULATION_CONTROL(reactor),1,0)
+        #gridLayout.addWidget(TRAPDRIVE_MODULATION_CONTROL(reactor),1,0)
         
         widget.setLayout(gridLayout)
         return widget

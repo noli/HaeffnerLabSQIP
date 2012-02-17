@@ -9,7 +9,7 @@ class QDACCalibrator(QtGui.QWidget):
         basepath = os.environ.get('LABRADPATH',None)
         if not basepath:
             raise Exception('Please set your LABRADPATH environment variable')
-        path = os.path.join(basepath,'cct/clients/qtui/daccalib.ui')
+        path = os.path.join(basepath,'sqip/clients/qtui/daccalib.ui')
 
         uic.loadUi(path,self)
 

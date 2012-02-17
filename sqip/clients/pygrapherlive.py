@@ -1,3 +1,22 @@
+"""
+### BEGIN NODE INFO
+
+[info]
+name = PYGRAPHERLIVE
+version = 1.1
+description = Live grapher for PMT counts...
+instancename = %LABRADNODE% PYGrapherLive
+[startup]
+cmdline = %PYTHON% %FILE%
+timeout = 20
+[shutdown]
+message = 987654321
+timeout = 20
+
+### END NODE INFO
+"""
+
+
 import sys
 from PyQt4 import QtGui
 from matplotlib.figure import Figure

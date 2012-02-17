@@ -25,11 +25,11 @@ class DAC_CALIBRATOR(QDACCalibrator):
     # This is where the magic happens
     def calib(self):
         
-        stepsize = 100
+        stepsize = 500
 
         digVoltages = range(0, 2**16, stepsize) # digital voltages we're going to iterate over
         anaVoltages = [] # corresponding analog voltages in volts
-        self.dacserver.set_individual_digital_voltages([(int(self.channelToCalib), 0)])
+        self.dacserver.set_individual_digital_voltages( [(int(self.channelToCalib), 0) ] )
         time.sleep(1)
         for dv in digVoltages: # iterate over digital voltages
 
@@ -38,6 +38,7 @@ class DAC_CALIBRATOR(QDACCalibrator):
             time.sleep(1)
             
             av = self.dmmserver.get_dc_volts()
+            #time.sleep(0.1)
             #av = 0
 
             anaVoltages.append(av)
@@ -74,7 +75,7 @@ class DAC_CALIBRATOR(QDACCalibrator):
         self.results.setText('RESULTS')
         self.y_int.setText('Intercept: ' + str(fit[2]))
         self.slope.setText('Slope: ' + str(fit[1]))
-        self.order2.setText('Nonlinearity: ' + str(fit[0]))
+        self.order2.setText('Nonlin.: ' + str(fit[0]))
 
 
 if __name__=="__main__":
@@ -85,7 +86,7 @@ if __name__=="__main__":
     dmmserver = cxn.keithley_2100_dmm
     datavault = cxn.data_vault
     registry = cxn.registry
-    dmmserver.select_device('sqip_expcontrol GPIB Bus - USB0::0x05E6::0x2100::1243106')
+    dmmserver.select_device('GPIB Bus - USB0::0x05E6::0x2100::1243106')
     app = QtGui.QApplication(sys.argv)
     icon = DAC_CALIBRATOR(cxn)
     icon.show()

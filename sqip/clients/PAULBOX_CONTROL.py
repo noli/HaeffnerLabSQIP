@@ -1,3 +1,24 @@
+"""
+### BEGIN NODE INFO
+
+[info]
+name = Paul Box Control
+version = 1.0
+description = Script control of Paul's Box
+instancename = %LABRADNODE% Paul Box Control
+[startup]
+cmdline = %PYTHON% %FILE%
+timeout = 20
+[shutdown]
+message = 987654321
+timeout = 20
+
+### END NODE INFO
+
+"""
+
+
+
 import sys
 from PyQt4 import QtGui
 from PyQt4 import QtCore, uic
@@ -12,7 +33,7 @@ class PAULBOX_CONTROL( QtGui.QWidget ):
         basepath = os.environ.get('LABRADPATH',None)
         if not basepath:
             raise Exception('Please set your LABRADPATH environment variable')
-        path = os.path.join(basepath,'cct/clients/qtui/paulboxfrontend.ui')
+        path = os.path.join(basepath,'sqip/clients/qtui/paulboxfrontend.ui')
         uic.loadUi(path,self)
         self.pbox = server
         self.floatnames = [''] * NUM_ENTRIES

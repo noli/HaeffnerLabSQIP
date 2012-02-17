@@ -10,17 +10,11 @@ except:
 	time.sleep(10)
 	raise()
 
-nodeDict = {'node_lattice_pc':
-				['Data Vault', 'Serial Server', 'DC Box', 'HP Server', 'Compensation Box','NormalPMTCountFPGA',
-				'Agilent Server', 'GPIB Bus','GPIB Device Manager', 'RohdeSchwarz Server','Tektronix Server','Trigger','NormalPMTFlow','Double Pass',
-				'Compensation LineScan'],
-			'node_lab_49':
-				['Serial Server', 'LaserDAC'],
-			'node_lab_197':
-				['Paul Box','dataProcessor','TimeResolvedFPGA']
+nodeDict = {'node_sqip_expcontrol':
+				['Data Vault','Serial Server','Paul Box','Trigger','NormalPMTCountFPGA','GPIB Bus','GPIB Device Manager','NormalPMTFlow']
 			}
 
-for node in ['node_lab_197','node_lab_49','node_lattice_pc']: #sets the order of opening
+for node in ['node_sqip_expcontrol']: #sets the order of opening
 	#make sure all node servers are up
 	if not node in cxn.servers: print node + ' is not running'
 	else:
@@ -37,4 +31,5 @@ for node in ['node_lab_197','node_lab_49','node_lattice_pc']: #sets the order of
 				except:
 					print 'ERROR with ' + server
 					
-time.sleep(10)
+time.sleep(5)
+print 'Done!'

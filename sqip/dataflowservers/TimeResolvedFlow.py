@@ -7,7 +7,7 @@
 name = TimeResolvedFlow
 version = 1.0
 description = 
-instancename = TimeResolvedFlow
+instancename = %LABRADNODE% TimeResolvedFlow
 
 [startup]
 cmdline = %PYTHON% %FILE%
@@ -32,7 +32,7 @@ import time
 
 class TimeResolvedFlow( LabradServer):
     
-    name = 'TimeResolvedFlow'
+    name = '%LABRADNODE% TimeResolvedFlow'
     @inlineCallbacks
     def initServer(self):
         #improve on this to start in arbitrary order

@@ -17,7 +17,7 @@
 ### BEGIN NODE INFO
 [info]
 name = Data Vault
-version = 2.3
+version = 2.31
 description = 
 instancename = Data Vault
 
@@ -342,6 +342,7 @@ class Session( object ):
 
         # notify listeners about the new dataset
         self.parent.onNewDataset( name, self.listeners )
+        ####self.parent.onNewDatasetDir((name, self.path), self.listeners) ####MR
         return dataset
 
     def openDataset( self, name ):
@@ -853,7 +854,8 @@ class DataVault( LabradServer ):
                 raw_input()
                 sys.exit()
         # create root session
-        root = Session( [''], self )
+        ####root = Session( [''], self ) ####MK
+        self.root = Session( [''], self )
 
     def initContext( self, c ):
         # start in the root session
@@ -886,7 +888,9 @@ class DataVault( LabradServer ):
 
     # session signals
     onNewDir = Signal( 543617, 'signal: new dir', 's' )
+    onNewDirectory = Signal( 543624, 'signal: new directory', 's' ) ####MK
     onNewDataset = Signal( 543618, 'signal: new dataset', 's' )
+    onNewDatasetDir = Signal(543623, 'signal: new dataset dir', '(s,?)') ####MR
     onTagsUpdated = Signal( 543622, 'signal: tags updated', '*(s*s)*(s*s)' )
 
     # dataset signals
@@ -961,6 +965,7 @@ class DataVault( LabradServer ):
         if name == '':
             raise EmptyNameError()
         path = c['path'] + [name]
+        self.onNewDirectory(str(path), self.root.listeners) ####MK
         if Session.exists( path ):
             raise DirectoryExistsError( path )
         sess = Session( path, self ) # make the new directory
@@ -986,6 +991,7 @@ class DataVault( LabradServer ):
         if len( dtype ) != 1 or dtype not in 'fs': raise TypeError( "dtype keyword only accepts 'f' or 's'" )
         session = self.getSession( c )
         dataset = session.newDataset( name or 'untitled', independents, dependents, dtype )
+        self.onNewDatasetDir((dataset.name, session.path), self.root.listeners) ####MR
         c['dataset'] = dataset.name # not the same as name; has number prefixed
         c['filepos'] = 0 # start at the beginning
         c['commentpos'] = 0

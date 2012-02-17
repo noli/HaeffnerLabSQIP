@@ -1,9 +1,19 @@
 '''
-9 Aug 2011
-Dylan Gorman
+### BEGIN NODE INFO
+[info]
+version = 1.1
+description = DAC Control
+instancename = CCTDAC
+[startup]
+cmdline = %PYTHON% %FILE%
+timeout = 20
+[shutdown]
+message = 987654321
+timeout = 20
 
-Adapted from laserdacbox.py
+### END NODE INFO
 '''
+##################  THS CODE IS REWRITTEN TO GIVE OUT THE VOLTAGES DIVIDES BY 4
 
 from serialdeviceserver import SerialDeviceServer, setting, inlineCallbacks, SerialDeviceError, SerialConnectionError, PortRegError
 from twisted.internet import reactor
@@ -17,21 +27,21 @@ import os
 
 SERVERNAME = 'CCTDAC'
 PREC_BITS = 16.
-DAC_MAX = 2500.
+DAC_MAX = 2500.  
 MAX_QUEUE_SIZE = 1000
 #time to wait for response from dc box
-TIMEOUT = 0.01
+TIMEOUT = 0.1
 #expected response from dc box after write
 RESP_STRING = 'r'
 #time to wait if correct response not received
 ERROR_TIME = 1.0
 SIGNALID = 270837
 
-NUMCHANNELS = 18
+NUMCHANNELS = 16
 
 # Nominal analog voltage range. Just used if there's no calibration available
-NOMINAL_VMIN = -10.0
-NOMINAL_VMAX = 10.0
+NOMINAL_VMIN = -40.0
+NOMINAL_VMAX = 40.0
 
 class DCBoxError( SerialConnectionError ):
     errorDict = {
@@ -59,6 +69,7 @@ class Port():
         analog voltage = m*(digital voltage) + b
         """
         """
+        
         registry.cd(['Calibrations'])
         (subs, keys) = registry.dir()
         
@@ -81,8 +92,9 @@ class Port():
         """
 
         self.analogVoltage = float(av)
+        print av
         dv = int(round( (av - self.b) / float(self.m) ))
-        
+        print dv
         if dv < 0:
             self.digitalVoltage = 0 # Set to the minimum acceptable code
         elif dv > ( 2**PREC_BITS - 1 ): # Largest acceptable code
@@ -159,8 +171,8 @@ class CCTDACServer( SerialDeviceServer ):
         """
         self.portList = []
         for i in range(1, NUMCHANNELS + 1): # Port nums are indexed from 1 in the microcrontroller (I think)
-            #self.portList.append(Port(i, self.client.registry))
-            self.portList.append(Port(i))
+            #self.portList.append(Port(i, self.client.registry))  # uncomment if registry is used
+            self.portList.append(Port(i))  # uncomment if registry is not used
 
     @inlineCallbacks
     def checkQueue( self, c ):
@@ -217,7 +229,7 @@ class CCTDACServer( SerialDeviceServer ):
         #yield self.ser.write( hex(85) )
         print 'reading'
         mes = yield self.ser.readline()
-        print mes
+        #print mes
         #print 'about to read'
         #resp = yield self.ser.read( len( ports ) )
         #print 'read',resp, len(resp)
@@ -266,7 +278,7 @@ class CCTDACServer( SerialDeviceServer ):
         notified = self.listeners.copy()
         notified.remove(context.ID)
         self.onNewUpdate('Channels updated', notified)
-        print "Notifyin' them listeners"
+        #print "Notifyin' them listeners"
     
     @setting( 0 , 'Set Digital Voltages', returns = '' )
     def setDigitalVoltages( self, c, digitalVoltages ):
@@ -300,6 +312,7 @@ class CCTDACServer( SerialDeviceServer ):
         """
         newPorts = []
         for (num, av) in analogVoltages:
+            print av
             p = Port(num)
             p.setAnalogVoltage(av)
             newPorts.append(p)
@@ -345,6 +358,8 @@ class CCTDACServer( SerialDeviceServer ):
         self.multipoleVectors['U3'] = data[:,5]
         self.multipoleVectors['U4'] = data[:,6]
         self.multipoleVectors['U5'] = data[:,7]
+        
+        print len(data[:,0])
         
     @setting( 6, 'Set Multipole Voltages', ms = '*(sv): dictionary of multipole voltages')
     def setMultipoleVoltages(self, c, ms):

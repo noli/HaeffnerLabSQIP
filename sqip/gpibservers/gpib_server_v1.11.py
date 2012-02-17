@@ -26,7 +26,7 @@ from pyvisa import visa, vpp43
 name = GPIB Bus
 version = 1.11
 description = Gives access to GPIB devices via pyvisa.
-instancename = %LABRADNODE% GPIB Bus
+instancename = GPIB Bus
 
 [startup]
 cmdline = %PYTHON% %FILE%
@@ -40,7 +40,7 @@ timeout = 20
 
 class GPIBBusServer(LabradServer):
     """Provides direct access to GPIB-enabled devices."""
-    name = '%LABRADNODE% GPIB Bus'
+    name = 'GPIB Bus'
 
     refreshInterval = 10
     defaultTimeout = 1.0

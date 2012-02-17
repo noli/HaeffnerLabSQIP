@@ -18,7 +18,7 @@
 [info]
 name = Keithley Server
 version = 1.0
-description = 
+description = Keithly Digital Multimeter
 
 [startup]
 cmdline = %PYTHON% %FILE%
