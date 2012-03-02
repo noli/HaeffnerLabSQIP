@@ -11,7 +11,7 @@ except:
 	raise()
 
 nodeDict = {'node_sqip_expcontrol':
-				['Data Vault','Serial Server','Paul Box','Trigger','NormalPMTCountFPGA','GPIB Bus','GPIB Device Manager','NormalPMTFlow']
+				['Data Vault','Serial Server','Paul Box','Trigger','NormalPMTCountFPGA','GPIB Bus','GPIB Device Manager','NormalPMTFlow','TimeResolvedFPGA','CCTDAC']
 			}
 
 for node in ['node_sqip_expcontrol']: #sets the order of opening
@@ -30,6 +30,10 @@ for node in ['node_sqip_expcontrol']: #sets the order of opening
 					cxn.servers[node].start(server)
 				except:
 					print 'ERROR with ' + server
-					
-time.sleep(5)
+		time.sleep(2)
+		
+			
+	
+	
+
 print 'Done!'

@@ -1,0 +1,9 @@
+.project
+.pydevproject
+*.exe
+*.pyc
+LabRAD.ini
+/Registry
+/docs
+Errors.log
+.recent.ini

@@ -2,7 +2,7 @@
 ### BEGIN NODE INFO
 [info]
 name = CCTGUI
-version = 1.1
+version = 1.2
 description = Graphical user interface for DAC control,laser room and PMT count
 instancename = CCTGUI
 [startup]
@@ -28,7 +28,7 @@ class CCT_GUI(QtGui.QMainWindow):
         voltageControlTab = self.makeVoltageWidget(reactor)
 
         tabWidget = QtGui.QTabWidget()
-        tabWidget.addTab(voltageControlTab,'&Trap V, DONT CHANGE FASTER THAN 1klick/s, otherwise reset DAC')
+        tabWidget.addTab(voltageControlTab,'&Trap Voltages')
         tabWidget.addTab(lightControlTab,'&Laser Room')
 
         self.setCentralWidget(tabWidget)
